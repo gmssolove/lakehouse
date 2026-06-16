@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pair — dasom's world</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IM+Fell+English:ital@0;1&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IM+Fell+English:ital@0;1&family=Noto+Serif+JP:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 :root {
@@ -13,75 +13,104 @@
   --text:#fdd6dd; --text-dim:#c9a0b4; --text-muted:#7a5568;
   --border:rgba(229,169,191,0.18); --border-strong:rgba(229,169,191,0.4);
 }
-html,body { height:100%; }
-body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-weight:400; overflow:hidden; height:100vh; }
+body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-weight:400; min-height:100vh; overflow-x:hidden; }
 
-nav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(26,16,24,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; height:52px; }
-.nav-back { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); text-decoration:none; margin-right:1.5rem; transition:color 0.2s; }
+nav { position:sticky; top:0; z-index:200; background:rgba(26,16,24,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; height:52px; gap:1rem; }
+.nav-back { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
 .nav-back:hover { color:var(--pink); }
-.nav-title { font-family:'IM Fell English',serif; font-style:italic; font-size:18px; color:var(--text); letter-spacing:0.06em; flex:1; }
-.nav-links { display:flex; gap:0; list-style:none; }
+.nav-title { font-family:'IM Fell English',serif; font-style:italic; font-size:18px; color:var(--text); flex:1; }
+.nav-links { display:flex; list-style:none; }
 .nav-links li a { display:block; padding:0 1rem; height:52px; line-height:52px; font-size:10px; letter-spacing:0.16em; color:var(--text-muted); text-decoration:none; transition:color 0.2s; text-transform:uppercase; }
-.nav-links li a:hover { color:var(--text-dim); }
 .nav-links li.active a { color:var(--pink); border-bottom:2px solid var(--pink); }
 
-/* MAIN LAYOUT */
-.main-wrap { display:flex; height:100vh; padding-top:52px; }
+.main-content { padding:2.5rem 2rem; max-width:1100px; margin:0 auto; }
 
-/* GRAPH AREA */
-.graph-area { flex:1; position:relative; overflow:hidden; }
-canvas#graph-canvas { position:absolute; inset:0; width:100%; height:100%; }
+/* PAIR GRID */
+.pair-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px; }
 
-/* DETAIL PANEL */
-.detail-panel {
-  width:380px; flex-shrink:0;
-  background:var(--bg2); border-left:1px solid var(--border);
-  display:flex; flex-direction:column;
-  transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1);
+/* PAIR CARD */
+.pair-card {
+  cursor:pointer;
+  transition:transform 0.25s;
+  position:relative;
+}
+.pair-card:hover { transform:translateY(-6px); }
+
+/* TWO CHARS SIDE BY SIDE */
+.pair-card-imgs {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  height:340px;
+  position:relative;
   overflow:hidden;
+  border:1px solid var(--border);
+  transition:border-color 0.25s;
 }
-.detail-panel.open { transform:translateX(0); }
+.pair-card:hover .pair-card-imgs { border-color:var(--pink); }
 
-.panel-header { padding:1.5rem; border-bottom:1px solid var(--border); }
-.panel-close { float:right; background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; transition:color 0.2s; }
-.panel-close:hover { color:var(--pink); }
-.panel-pair-names {
-  font-family:'IM Fell English',serif; font-style:italic;
-  font-size:22px; color:var(--text); letter-spacing:0.04em;
-  margin-bottom:6px; margin-top:4px;
-}
-.panel-pair-names span { color:var(--pink); }
-.panel-rel-tag {
-  display:inline-block; padding:3px 12px;
-  border:1px solid var(--pink-dark); font-size:10px;
-  letter-spacing:0.15em; text-transform:uppercase;
-  color:var(--pink-dim); font-family:'Cormorant Garamond',serif; font-style:italic;
+.pair-char-wrap {
+  position:relative;
+  overflow:hidden;
+  background:var(--bg3);
 }
 
-.panel-body { flex:1; overflow-y:auto; padding:1.5rem; }
-.panel-body::-webkit-scrollbar { width:3px; }
-.panel-body::-webkit-scrollbar-thumb { background:var(--pink-dark); }
+.pair-char-img { width:100%; height:100%; object-fit:cover; object-position:top; transition:filter 0.35s, opacity 0.35s; }
+.pair-char-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'IM Fell English',serif; font-style:italic; font-size:48px; color:rgba(229,169,191,0.07); transition:filter 0.35s; }
 
-.panel-imgs { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1.5rem; }
-.panel-img-wrap { aspect-ratio:3/4; background:var(--bg3); border:1px solid var(--border); overflow:hidden; position:relative; }
-.panel-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:top; }
-.panel-img-name { position:absolute; bottom:0; left:0; right:0; padding:8px; background:linear-gradient(to top,rgba(26,16,24,0.9),transparent); font-size:11px; color:var(--text-dim); text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; letter-spacing:0.08em; }
-.panel-img-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'IM Fell English',serif; font-style:italic; font-size:42px; color:rgba(229,169,191,0.08); }
+/* HOVER: 흐려지면서 이름 표시 */
+.pair-char-hover { position:absolute; inset:0; background:rgba(26,16,24,0.7); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s; flex-direction:column; gap:4px; }
+.pair-card:hover .pair-char-hover { opacity:1; }
+.pair-card:hover .pair-char-img { filter:blur(2px); opacity:0.35; }
+.pair-card:hover .pair-char-placeholder { filter:blur(2px); opacity:0.25; }
+.pair-char-hover-name { font-family:'IM Fell English',serif; font-style:italic; font-size:16px; color:var(--text); letter-spacing:0.04em; text-align:center; padding:0 6px; }
+.pair-char-hover-sub { font-size:9px; color:var(--pink-dim); letter-spacing:0.1em; text-transform:uppercase; }
 
-.panel-section { margin-bottom:1.5rem; }
-.panel-section-title { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-dim); margin-bottom:0.75rem; font-family:'Cormorant Garamond',serif; font-style:italic; display:flex; align-items:center; gap:8px; }
-.panel-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
-.panel-desc { font-size:12px; color:var(--text-dim); line-height:1.9; letter-spacing:0.03em; }
-.panel-keywords { display:flex; flex-wrap:wrap; gap:6px; }
-.panel-keyword { padding:3px 10px; background:rgba(160,96,128,0.1); border:1px solid var(--border); font-size:10px; color:var(--text-muted); letter-spacing:0.08em; font-family:'Cormorant Garamond',serif; font-style:italic; }
+/* CENTER DIVIDER */
+.pair-center-line { position:absolute; top:0; bottom:0; left:50%; transform:translateX(-50%); width:1px; background:var(--border); z-index:2; }
+.pair-center-symbol { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:3; background:var(--bg2); border:1px solid var(--border); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--pink-dim); transition:all 0.25s; }
+.pair-card:hover .pair-center-symbol { border-color:var(--pink); color:var(--pink); }
 
-/* LEGEND */
-.graph-legend { position:absolute; bottom:1.5rem; left:1.5rem; display:flex; flex-direction:column; gap:6px; z-index:10; }
-.legend-item { display:flex; align-items:center; gap:8px; font-size:10px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
-.legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+/* BOTTOM INFO */
+.pair-card-bottom {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-top:none;
+  padding:14px 16px;
+  transition:border-color 0.25s;
+}
+.pair-card:hover .pair-card-bottom { border-color:var(--pink); }
+.pair-card-names { font-family:'IM Fell English',serif; font-style:italic; font-size:17px; color:var(--text); letter-spacing:0.03em; margin-bottom:4px; }
+.pair-card-names span { color:var(--pink); margin:0 6px; }
+.pair-card-rel { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); font-family:'Cormorant Garamond',serif; font-style:italic; }
+.pair-card-keywords { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+.pair-card-keyword { padding:2px 8px; background:rgba(160,96,128,0.08); border:1px solid var(--border); font-size:9px; color:var(--text-muted); letter-spacing:0.06em; font-family:'Cormorant Garamond',serif; font-style:italic; }
 
-/* HINT */
-.graph-hint { position:absolute; top:1.5rem; left:50%; transform:translateX(-50%); font-size:10px; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase; pointer-events:none; }
+/* DETAIL MODAL */
+#detail-modal { display:none; position:fixed; inset:0; z-index:500; background:rgba(10,6,8,0.85); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:2rem; }
+#detail-modal.active { display:flex; }
+.detail-box { background:var(--bg2); border:1px solid var(--border); max-width:760px; width:100%; max-height:88vh; overflow:hidden; display:flex; flex-direction:column; position:relative; }
+.detail-close { position:absolute; top:1rem; right:1rem; background:transparent; border:1px solid var(--border); color:var(--text-muted); cursor:pointer; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:12px; z-index:10; transition:all 0.2s; }
+.detail-close:hover { border-color:var(--pink-dim); color:var(--pink); }
+
+.detail-top { display:grid; grid-template-columns:1fr 1fr; height:280px; border-bottom:1px solid var(--border); }
+.detail-top-char { position:relative; overflow:hidden; }
+.detail-top-char img { width:100%; height:100%; object-fit:cover; object-position:top; }
+.detail-top-char-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'IM Fell English',serif; font-style:italic; font-size:64px; color:rgba(229,169,191,0.06); background:var(--bg3); }
+.detail-top-char-gradient { position:absolute; inset:0; background:linear-gradient(to top, var(--bg2) 0%, transparent 40%); }
+.detail-top-char-name { position:absolute; bottom:1rem; left:0; right:0; text-align:center; font-family:'IM Fell English',serif; font-style:italic; font-size:16px; color:var(--text); letter-spacing:0.04em; }
+.detail-top-char-divider { position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--border); z-index:2; pointer-events:none; }
+
+.detail-body { flex:1; overflow-y:auto; padding:1.75rem; }
+.detail-body::-webkit-scrollbar { width:3px; }
+.detail-body::-webkit-scrollbar-thumb { background:var(--pink-dark); }
+.detail-pair-title { font-family:'IM Fell English',serif; font-style:italic; font-size:22px; color:var(--text); margin-bottom:4px; }
+.detail-pair-title span { color:var(--pink); }
+.detail-rel-badge { display:inline-block; padding:3px 12px; border:1px solid var(--pink-dark); font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink-dim); font-family:'Cormorant Garamond',serif; font-style:italic; margin-bottom:1.25rem; }
+.detail-section-title { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-dim); margin-bottom:0.6rem; margin-top:1.25rem; font-family:'Cormorant Garamond',serif; font-style:italic; }
+.detail-desc { font-size:12px; color:var(--text-dim); line-height:1.9; }
+.detail-keywords { display:flex; flex-wrap:wrap; gap:6px; }
+.detail-keyword { padding:3px 12px; background:rgba(160,96,128,0.08); border:1px solid var(--border); font-size:10px; color:var(--text-muted); letter-spacing:0.08em; font-family:'Cormorant Garamond',serif; font-style:italic; }
 
 /* BGM */
 #bgm-player { position:fixed; bottom:1.5rem; right:1.5rem; z-index:999; background:rgba(26,16,24,0.96); border:1px solid var(--border); backdrop-filter:blur(12px); display:flex; align-items:center; gap:10px; padding:10px 14px; min-width:220px; max-width:300px; transition:all 0.3s; }
@@ -102,45 +131,31 @@ canvas#graph-canvas { position:absolute; inset:0; width:100%; height:100%; }
 
 <nav>
   <a href="index.html" class="nav-back">← back</a>
-  <div class="nav-title">Pair — Relationship Map</div>
+  <div class="nav-title">Pair — Relationships</div>
   <ul class="nav-links">
     <li><a href="oc.html">OC</a></li>
     <li class="active"><a href="pair.html">Pair</a></li>
   </ul>
 </nav>
 
-<div class="main-wrap">
-  <div class="graph-area">
-    <canvas id="graph-canvas"></canvas>
-    <div class="graph-hint">노드를 클릭하면 상세 정보가 표시됩니다</div>
-    <div class="graph-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#e5a9bf;"></div>주인공</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#c0392b;opacity:0.7;"></div>키사라기</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#9a7d4a;opacity:0.8;"></div>서브</div>
-    </div>
-  </div>
+<div class="main-content">
+  <div class="pair-grid" id="pair-grid"></div>
+</div>
 
-  <div class="detail-panel" id="detail-panel">
-    <div class="panel-header">
-      <button class="panel-close" onclick="closePanel()">✕</button>
-      <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);">Relationship</div>
-      <div class="panel-pair-names" id="panel-names">— <span>&</span> —</div>
-      <div class="panel-rel-tag" id="panel-rel-tag">—</div>
-    </div>
-    <div class="panel-body">
-      <div class="panel-imgs" id="panel-imgs"></div>
-      <div class="panel-section">
-        <div class="panel-section-title">About</div>
-        <div class="panel-desc" id="panel-desc">—</div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-section-title">Keywords</div>
-        <div class="panel-keywords" id="panel-keywords"></div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-section-title">Story</div>
-        <div class="panel-desc" id="panel-story" style="white-space:pre-wrap;">—</div>
-      </div>
+<!-- DETAIL MODAL -->
+<div id="detail-modal">
+  <div class="detail-box">
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <div class="detail-top" id="detail-top"></div>
+    <div class="detail-body">
+      <div class="detail-pair-title" id="detail-names">— <span>&</span> —</div>
+      <div class="detail-rel-badge" id="detail-rel">—</div>
+      <div class="detail-section-title">About</div>
+      <div class="detail-desc" id="detail-desc">—</div>
+      <div class="detail-section-title">Keywords</div>
+      <div class="detail-keywords" id="detail-keywords"></div>
+      <div class="detail-section-title">Story</div>
+      <div class="detail-desc" id="detail-story" style="white-space:pre-wrap;">—</div>
     </div>
   </div>
 </div>
@@ -155,244 +170,70 @@ canvas#graph-canvas { position:absolute; inset:0; width:100%; height:100%; }
 <div id="yt-container" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;"></div>
 
 <script>
-// DEFAULT PAIRS DATA
 var defaultPairs = [
-  {
-    id:'yundan-negai',
-    chars:['윤단','願'],
-    charImgs:['',''],
-    relation:'Silent Bond',
-    desc:'말하지 않아도 곁에 있는 것. 건조한 말투와 조용한 존재감 사이의 관계.',
-    keywords:['침묵','동행','신뢰','말없는 이해'],
-    story:'',
-    color:'#e5a9bf'
-  },
-  {
-    id:'uru-toya',
-    chars:['遠藤 潤','遠藤 斗哉'],
-    charImgs:['',''],
-    relation:'Antagonist × Protagonist',
-    desc:'키사라기 고교의 생도회장과 전학생. 서로가 서로의 비밀을 알고 있다.',
-    keywords:['대립','비밀','학교','숨겨진 연결'],
-    story:'',
-    color:'#c0392b'
-  },
-  {
-    id:'iori-toya',
-    chars:['遠藤 伊織','遠藤 斗哉'],
-    charImgs:['',''],
-    relation:'Founder × Descendant',
-    desc:'창립자와 그 후계자. 봉인된 진실을 사이에 둔 두 사람.',
-    keywords:['혈연','봉인','과거','운명'],
-    story:'',
-    color:'#9a7d4a'
-  }
+  {id:'yundan-negai',chars:['윤단','願'],charImgs:['',''],charSubs:['Yundan','Negai'],relation:'Silent Bond',desc:'말하지 않아도 곁에 있는 것. 건조한 말투와 조용한 존재감.',keywords:['침묵','동행','신뢰','말없는 이해'],story:'',color:'#e5a9bf'},
+  {id:'uru-toya',chars:['遠藤 潤','遠藤 斗哉'],charImgs:['',''],charSubs:['Uru','Toya'],relation:'Antagonist × Protagonist',desc:'키사라기 고교의 생도회장과 전학생.',keywords:['대립','비밀','학교'],story:'',color:'#c0392b'},
+  {id:'iori-toya',chars:['遠藤 伊織','遠藤 斗哉'],charImgs:['',''],charSubs:['Iori','Toya'],relation:'Founder × Descendant',desc:'창립자와 그 후계자.',keywords:['혈연','봉인','운명'],story:'',color:'#9a7d4a'}
 ];
 
 function getPairs(){ try{return JSON.parse(localStorage.getItem('oc_pairs'))||defaultPairs;}catch(e){return defaultPairs;} }
 
-// GRAPH
-var canvas = document.getElementById('graph-canvas');
-var ctx = canvas.getContext('2d');
-var nodes = [];
-var edges = [];
-var hoveredNode = null;
-var animFrame = null;
-
-function buildGraph(){
-  var pairs = getPairs();
-  nodes = [];
-  edges = [];
-  var charMap = {};
-
-  pairs.forEach(function(p){
-    p.chars.forEach(function(name, ci){
-      if(!charMap[name]){
-        var existing = nodes.find(function(n){return n.name===name;});
-        if(!existing){
-          charMap[name] = {
-            id: name,
-            name: name,
-            img: p.charImgs[ci]||'',
-            color: p.color,
-            x: Math.random()*0.6+0.2,
-            y: Math.random()*0.6+0.2,
-            vx:0, vy:0, r:28
-          };
-          nodes.push(charMap[name]);
-        }
-      }
-    });
-    edges.push({ a: p.chars[0], b: p.chars[1], relation: p.relation, color: p.color, pairId: p.id });
-  });
-
-  // spread initial positions
-  nodes.forEach(function(n, i){
-    var angle = (i / nodes.length) * Math.PI * 2;
-    n.x = 0.5 + Math.cos(angle) * 0.3;
-    n.y = 0.5 + Math.sin(angle) * 0.28;
-  });
-}
-
-function resizeCanvas(){
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-}
-
-function simulate(){
-  var W = canvas.width, H = canvas.height;
-  // repulsion
-  nodes.forEach(function(a){
-    nodes.forEach(function(b){
-      if(a===b) return;
-      var dx = a.x*W - b.x*W, dy = a.y*H - b.y*H;
-      var dist = Math.sqrt(dx*dx+dy*dy)||1;
-      var force = 8000/(dist*dist);
-      a.vx += dx/dist*force/W;
-      a.vy += dy/dist*force/H;
-    });
-  });
-  // attraction along edges
-  edges.forEach(function(e){
-    var na = nodes.find(function(n){return n.id===e.a;}), nb = nodes.find(function(n){return n.id===e.b;});
-    if(!na||!nb) return;
-    var dx=(nb.x-na.x)*W, dy=(nb.y-na.y)*H, dist=Math.sqrt(dx*dx+dy*dy)||1;
-    var target=160, force=(dist-target)*0.0012;
-    na.vx += dx/dist*force; na.vy += dy/dist*force;
-    nb.vx -= dx/dist*force; nb.vy -= dy/dist*force;
-  });
-  // center gravity
-  nodes.forEach(function(n){
-    n.vx += (0.5-n.x)*0.008;
-    n.vy += (0.5-n.y)*0.008;
-    n.vx *= 0.85; n.vy *= 0.85;
-    n.x += n.vx; n.y += n.vy;
-    n.x = Math.max(0.08,Math.min(0.92,n.x));
-    n.y = Math.max(0.08,Math.min(0.92,n.y));
-  });
-}
-
-function draw(){
-  var W=canvas.width, H=canvas.height;
-  ctx.clearRect(0,0,W,H);
-
-  // edges
-  edges.forEach(function(e){
-    var na=nodes.find(function(n){return n.id===e.a;}), nb=nodes.find(function(n){return n.id===e.b;});
-    if(!na||!nb) return;
-    var ax=na.x*W, ay=na.y*H, bx=nb.x*W, by=nb.y*H;
-    ctx.save();
-    ctx.strokeStyle=e.color+'88';
-    ctx.lineWidth=1.5;
-    ctx.setLineDash([4,4]);
-    ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
-    ctx.setLineDash([]);
-    // relation label
-    var mx=(ax+bx)/2, my=(ay+by)/2;
-    ctx.fillStyle='rgba(229,169,191,0.5)';
-    ctx.font='10px Cormorant Garamond, serif';
-    ctx.textAlign='center';
-    ctx.fillText(e.relation, mx, my-6);
-    ctx.restore();
-  });
-
-  // nodes
-  nodes.forEach(function(n){
-    var x=n.x*W, y=n.y*H;
-    var isHover=(hoveredNode&&hoveredNode.id===n.id);
-    var r=isHover?n.r+4:n.r;
-    ctx.save();
-    // glow
-    if(isHover){
-      ctx.shadowColor=n.color;
-      ctx.shadowBlur=16;
-    }
-    // circle
-    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fillStyle=n.color+'22';
-    ctx.fill();
-    ctx.strokeStyle=isHover?n.color:n.color+'88';
-    ctx.lineWidth=isHover?2:1.5;
-    ctx.stroke();
-    ctx.shadowBlur=0;
-    // name
-    ctx.fillStyle=isHover?'#fdd6dd':'#c9a0b4';
-    ctx.font=(isHover?'500 ':'')+'12px Noto Sans KR, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText(n.name, x, y+r+14);
-    ctx.restore();
-  });
-
-  simulate();
-  animFrame = requestAnimationFrame(draw);
-}
-
-function getNodeAt(mx,my){
-  var W=canvas.width, H=canvas.height;
-  return nodes.find(function(n){
-    var dx=(n.x*W-mx), dy=(n.y*H-my);
-    return Math.sqrt(dx*dx+dy*dy)<=n.r+8;
-  })||null;
-}
-
-function getEdgeAt(mx,my){
-  var W=canvas.width, H=canvas.height;
+function renderGrid(){
   var pairs=getPairs();
-  var found=null;
-  edges.forEach(function(e){
-    var na=nodes.find(function(n){return n.id===e.a;}), nb=nodes.find(function(n){return n.id===e.b;});
-    if(!na||!nb) return;
-    var ax=na.x*W,ay=na.y*H,bx=nb.x*W,by=nb.y*H;
-    var dx=bx-ax,dy=by-ay,len=Math.sqrt(dx*dx+dy*dy);
-    var t=((mx-ax)*dx+(my-ay)*dy)/(len*len);
-    t=Math.max(0,Math.min(1,t));
-    var px=ax+t*dx,py=ay+t*dy;
-    var dist=Math.sqrt((mx-px)*(mx-px)+(my-py)*(my-py));
-    if(dist<12) found=pairs.find(function(p){return p.id===e.pairId;});
+  var grid=document.getElementById('pair-grid');
+  grid.innerHTML='';
+  pairs.forEach(function(p){
+    var card=document.createElement('div');
+    card.className='pair-card';
+    card.onclick=function(){openDetail(p);};
+
+    var charImgsHtml=p.chars.map(function(name,i){
+      var img=p.charImgs&&p.charImgs[i];
+      var sub=p.charSubs&&p.charSubs[i]||'';
+      return '<div class="pair-char-wrap">'
+        +(img?'<img class="pair-char-img" src="'+img+'" alt="'+name+'">':'<div class="pair-char-placeholder">'+name[0]+'</div>')
+        +'<div class="pair-char-hover"><div class="pair-char-hover-name">'+name+'</div>'+(sub?'<div class="pair-char-hover-sub">'+sub+'</div>':'')+'</div>'
+        +'</div>';
+    }).join('');
+
+    var kwHtml=(p.keywords||[]).slice(0,3).map(function(k){return'<div class="pair-card-keyword">'+k+'</div>';}).join('');
+
+    card.innerHTML='<div class="pair-card-imgs">'
+      +charImgsHtml
+      +'<div class="pair-center-line"></div>'
+      +'<div class="pair-center-symbol">&</div>'
+      +'</div>'
+      +'<div class="pair-card-bottom">'
+      +'<div class="pair-card-names">'+p.chars[0]+' <span>&</span> '+p.chars[1]+'</div>'
+      +'<div class="pair-card-rel">'+p.relation+'</div>'
+      +'<div class="pair-card-keywords">'+kwHtml+'</div>'
+      +'</div>';
+    grid.appendChild(card);
   });
-  return found;
 }
 
-canvas.addEventListener('mousemove',function(ev){
-  var rect=canvas.getBoundingClientRect();
-  var mx=ev.clientX-rect.left, my=ev.clientY-rect.top;
-  hoveredNode=getNodeAt(mx,my);
-  canvas.style.cursor=hoveredNode||getEdgeAt(mx,my)?'pointer':'default';
-});
+function openDetail(p){
+  document.getElementById('detail-names').innerHTML=p.chars[0]+' <span>&</span> '+p.chars[1];
+  document.getElementById('detail-rel').textContent=p.relation||'—';
+  document.getElementById('detail-desc').textContent=p.desc||'—';
+  document.getElementById('detail-story').textContent=p.story||'—';
+  var kw=document.getElementById('detail-keywords');
+  kw.innerHTML=(p.keywords||[]).map(function(k){return'<div class="detail-keyword">'+k+'</div>';}).join('');
 
-canvas.addEventListener('click',function(ev){
-  var rect=canvas.getBoundingClientRect();
-  var mx=ev.clientX-rect.left, my=ev.clientY-rect.top;
-  var node=getNodeAt(mx,my);
-  if(node){
-    var pairs=getPairs().filter(function(p){return p.chars.includes(node.id);});
-    if(pairs.length) openPanel(pairs[0]);
-    return;
-  }
-  var edge=getEdgeAt(mx,my);
-  if(edge) openPanel(edge);
-});
+  var top=document.getElementById('detail-top');
+  top.innerHTML=p.chars.map(function(name,i){
+    var img=p.charImgs&&p.charImgs[i];
+    return '<div class="detail-top-char">'
+      +(img?'<img src="'+img+'" alt="'+name+'">':'<div class="detail-top-char-placeholder">'+name[0]+'</div>')
+      +'<div class="detail-top-char-gradient"></div>'
+      +'<div class="detail-top-char-name">'+name+'</div>'
+      +'</div>';
+  }).join('')+'<div class="detail-top-char-divider"></div>';
 
-function openPanel(pair){
-  document.getElementById('panel-names').innerHTML = pair.chars[0]+' <span>&</span> '+pair.chars[1];
-  document.getElementById('panel-rel-tag').textContent = pair.relation||'—';
-  document.getElementById('panel-desc').textContent = pair.desc||'—';
-  document.getElementById('panel-story').textContent = pair.story||'—';
-  var kw=document.getElementById('panel-keywords');
-  kw.innerHTML=(pair.keywords||[]).map(function(k){return'<div class="panel-keyword">'+k+'</div>';}).join('');
-  var imgs=document.getElementById('panel-imgs');
-  imgs.innerHTML=pair.chars.map(function(name,i){
-    var img=pair.charImgs&&pair.charImgs[i];
-    return'<div class="panel-img-wrap">'+(img?'<img src="'+img+'" alt="'+name+'">':'<div class="panel-img-placeholder">'+name[0]+'</div>')+'<div class="panel-img-name">'+name+'</div></div>';
-  }).join('');
-  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('detail-modal').classList.add('active');
 }
-
-function closePanel(){
-  document.getElementById('detail-panel').classList.remove('open');
-}
-
-window.addEventListener('resize',function(){ resizeCanvas(); });
+function closeDetail(){ document.getElementById('detail-modal').classList.remove('active'); }
+document.getElementById('detail-modal').addEventListener('click',function(e){if(e.target===this)closeDetail();});
 
 // BGM
 var bgmData=JSON.parse(localStorage.getItem('kisaragi_bgm')||'{"title":"BGM","artist":"","youtubeId":""}');
@@ -409,9 +250,7 @@ document.getElementById('bgm-vol').addEventListener('input',function(){if(ytPlay
 document.getElementById('bgm-toggle-collapse').addEventListener('click',function(){document.getElementById('bgm-player').classList.add('collapsed');});
 document.getElementById('bgm-expand-btn').addEventListener('click',function(){document.getElementById('bgm-player').classList.remove('collapsed');});
 
-resizeCanvas();
-buildGraph();
-draw();
+renderGrid();
 </script>
 </body>
 </html>
