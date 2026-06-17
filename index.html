@@ -643,9 +643,9 @@ html,body{overflow:hidden!important;}
       <div class="content-block" id="page-guest">
         <div class="page-heading">Guest</div>
         <div class="page-sub">방명록</div>
-        <div style="width:460px;max-width:100%;display:flex;flex-direction:column;gap:0.875rem;margin-top:1.5rem;">
-          <div id="guest-list"><div class="page-coming">— 아직 방명록이 없습니다 —</div></div>
-          <div style="font-size:11px;color:var(--text-muted);padding:8px 12px;background:var(--bg2);border:1px solid var(--border);letter-spacing:0.06em;" id="guest-login-notice">
+        <div id="guest-list"><div class="page-coming">— 아직 방명록이 없습니다 —</div></div>
+        <div style="margin-top:1.5rem;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:1rem;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);letter-spacing:0.06em;" id="guest-login-notice">
             방명록 작성은 로그인 후 가능합니다.
           </div>
           <div id="guest-form-inner" style="display:none;">
@@ -942,6 +942,36 @@ const app=initializeApp(cfg);
 const auth=getAuth(app);
 const db=getDatabase(app);
 window._db=db;
+// ===== 전체 데이터 실시간 동기화 =====
+// 모든 lhdata/* 키를 onValue로 감지 → localStorage 업데이트 → 렌더 함수 호출
+var _syncKeys = [
+  'oc_characters','oc_categories','oc_pairs',
+  'lh_trpg','lh_diary','lh_gallery','lh_banners','lh_archive',
+  'kisaragi_hero','kisaragi_characters','kisaragi_chronicle','kisaragi_bgm'
+];
+// 키별 렌더 함수 맵 (plain script가 로드된 후 실행되므로 함수 존재 체크 필요)
+var _renderMap = {
+  'oc_characters':  function(){if(typeof renderOCCharList==='function')renderOCCharList();},
+  'oc_categories':  function(){if(typeof renderCatList==='function')renderCatList();},
+  'oc_pairs':       function(){if(typeof renderPairList==='function')renderPairList();},
+  'lh_trpg':        function(){if(typeof renderTrpgCards==='function')renderTrpgCards();if(typeof renderTrpgList==='function')renderTrpgList();},
+  'lh_diary':       function(){if(typeof renderDiaryList==='function')renderDiaryList();if(typeof renderPublicDiary==='function')renderPublicDiary();},
+  'lh_gallery':     function(){if(typeof renderGalList==='function')renderGalList();if(typeof renderPublicGallery==='function')renderPublicGallery();},
+  'lh_banners':     function(){if(typeof renderBannerList==='function')renderBannerList();if(typeof renderPublicBanner==='function')renderPublicBanner();},
+  'lh_archive':     function(){if(typeof renderArchiveList==='function')renderArchiveList();},
+  'kisaragi_hero':  function(){if(typeof loadKsForm==='function')loadKsForm();},
+  'kisaragi_characters': function(){if(typeof renderKsCharList==='function')renderKsCharList();if(typeof renderAdmChrList==='function')renderAdmChrList();},
+  'kisaragi_chronicle':  function(){if(typeof renderKsChronicle==='function')renderKsChronicle();},
+  'kisaragi_bgm':   function(){}
+};
+_syncKeys.forEach(function(key){
+  onValue(ref(db,'lhdata/'+key), function(snap){
+    if(snap.exists()){
+      localStorage.setItem(key, JSON.stringify(snap.val()));
+      if(_renderMap[key]) _renderMap[key]();
+    }
+  });
+});
 window._fbSet=set;
 window._fbRef=ref;
 // 실시간 동기화 - 관리자가 수정하면 모든 방문자에게 즉시 반영
@@ -1153,12 +1183,14 @@ function switchAdmTab(name,el){
 function gd(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}}
 function sd(k,v){
   localStorage.setItem(k,JSON.stringify(v));
-  // Firebase에도 동시 저장 (동기화)
-  if(window._db&&window._fbSet&&window._fbRef){
-    try{
-      window._fbSet(window._fbRef(window._db,'lhdata/'+k.replace(/[.#$\[\]]/g,'_')),v);
-    }catch(e){}
+  function _write(){
+    if(window._db&&window._fbSet&&window._fbRef){
+      window._fbSet(window._fbRef(window._db,'lhdata/'+k.replace(/[.#$\[\]]/g,'_')),v)
+        .catch(function(e){console.error('[Firebase] sd 저장 실패 ('+k+'):', e.code);});
+    }
   }
+  if(window._db){_write();}
+  else{var _a=0,_t=setInterval(function(){_a++;if(window._db){clearInterval(_t);_write();}else if(_a>50){clearInterval(_t);}},100);}
 }
 // Firebase에서 전체 데이터 로드 → localStorage 동기화
 window.syncFromFirebase=function(cb){
@@ -1444,7 +1476,7 @@ function renderTrpgCards(){
       +'<div class="world-card-icon" style="font-size:18px;color:var(--pink-dim);flex-shrink:0;">✦</div>'
       +'<div class="world-card-info" style="flex:1;"><div class="world-card-name">'+scenario+'</div>'
       +(desc?'<div class="world-card-sub">'+desc+'</div>':'')+'</div></div>'
-      +(character?'<div style="font-size:10px;color:var(--pink-dim);letter-spacing:.1em;padding-left:0;">OC — '+character+'</div>':'')
+      +(character?'<div style="font-size:10px;color:var(--pink-dim);letter-spacing:.1em;padding-left:0;">캐릭터 — '+character+'</div>':'')
       +'</div>';
   }).join('');
 }
