@@ -367,8 +367,8 @@ html,body{overflow:hidden!important;}
 .site-title span{color:#e6b895!important;}
 #page-trpg #trpg-cards,
 #page-trpg > .world-card-item{
-  width:min(700px,calc(100vw - 440px))!important;
-  max-width:700px!important;
+  width:100%!important;
+  
   box-sizing:border-box!important;
 }
 #page-trpg > .world-card-item{
@@ -378,7 +378,7 @@ html,body{overflow:hidden!important;}
 }
 #page-trpg #trpg-cards .page-coming,
 #page-trpg #trpg-cards .world-card-item{width:100%!important;max-width:100%!important;box-sizing:border-box!important;}
-#page-guest #guest-list{width:100%!important;min-height:0!important;}
+#page-guest #guest-list{width:100%!important;}
 #page-guest #guest-list>div{box-sizing:border-box!important;}
 #page-guest #guest-login-notice{
   display:inline-flex!important;
@@ -388,7 +388,7 @@ html,body{overflow:hidden!important;}
   min-height:0!important;
   padding:9px 14px!important;
   margin:2px 0 1rem 0!important;
-  transform:translateX(-78px)!important;
+  transform:none!important;
   box-sizing:border-box!important;
   white-space:nowrap!important;
   background:linear-gradient(135deg,rgba(16,18,16,.76),rgba(37,37,32,.56))!important;
@@ -397,7 +397,7 @@ html,body{overflow:hidden!important;}
 #page-guest #guest-form-inner{
   width:100%!important;
   
-  
+  transform:none!important;
   margin-left:0!important;
   box-sizing:border-box!important;
 }
@@ -410,33 +410,10 @@ html,body{overflow:hidden!important;}
 }
 </style>
 <style id="lakehouse-guest-align-fix-css">
-/* Guest 전체 컨테이너 - 460px로 통일 */
-#page-guest .guest-container{
-  width:460px!important;
-  max-width:100%!important;
-  display:flex!important;
-  flex-direction:column!important;
-  gap:0.875rem!important;
-}
+#page-guest .guest-container{width:460px!important;max-width:100%!important;}
 #page-guest #guest-list,
 #page-guest #guest-login-notice,
-#page-guest #guest-form-inner{
-  transform:none!important;
-  margin-left:0!important;
-  width:100%!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-#page-guest #guest-login-notice{
-  display:block!important;
-  padding:8px 12px!important;
-  white-space:normal!important;
-}
-#page-guest #guest-form-inner .form-group{
-  width:100%!important;
-  margin:0 0 12px 0!important;
-  box-sizing:border-box!important;
-}
+#page-guest #guest-form-inner{transform:none!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-left:0!important;}
 </style>
 </head>
 <body>
@@ -1428,7 +1405,7 @@ function renderTrpgCards(){
       +'<div class="world-card-icon" style="font-size:18px;color:var(--pink-dim);flex-shrink:0;">✦</div>'
       +'<div class="world-card-info" style="flex:1;"><div class="world-card-name">'+scenario+'</div>'
       +(desc?'<div class="world-card-sub">'+desc+'</div>':'')+'</div></div>'
-      +(character?'<div style="font-size:10px;color:var(--pink-dim);letter-spacing:.1em;padding-left:0;">OC — '+character+'</div>':'')
+      +(character?'<div style="font-size:10px;color:var(--pink-dim);letter-spacing:.1em;padding-left:28px;">OC — '+character+'</div>':'')
       +'</div>';
   }).join('');
 }
