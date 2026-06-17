@@ -156,8 +156,6 @@ input[type=file]{display:none;}
 .btn-edit{padding:5px 14px;background:transparent;border:1px solid var(--gold-dim);color:var(--gold-dim);font-family:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer;transition:all .2s;}
 .btn-edit:hover{background:rgba(196,154,108,.1);color:var(--gold);}
 .game-body{flex:1;display:grid;grid-template-columns:2fr 3fr;overflow:hidden;}
-
-/* 왼쪽 */
 .game-left{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--bg2) 0%,var(--bg) 100%);animation:fadeSlideLeft .7s cubic-bezier(.22,1,.36,1) both;}
 .game-char-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(196,154,108,.07),transparent 65%);}
 .game-char-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;font-size:80px;color:rgba(196,154,108,.06);}
@@ -182,8 +180,6 @@ input[type=file]{display:none;}
 .theme-info{flex:1;min-width:0;}
 .theme-title{font-size:10px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .theme-artist{font-size:9px;color:var(--text-muted);}
-
-/* 오른쪽 */
 .game-right{overflow-y:auto;display:flex;flex-direction:column;background:rgba(10,8,6,.3);border-left:1px solid var(--border);animation:fadeSlideRight .7s cubic-bezier(.22,1,.36,1) both;}
 .game-right::-webkit-scrollbar{width:2px;}
 .game-right::-webkit-scrollbar-thumb{background:var(--gold-dark);}
@@ -207,9 +203,8 @@ input[type=file]{display:none;}
 .game-gallery-img{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:top;border:1px solid var(--border);cursor:pointer;transition:border-color .2s;}
 .game-gallery-img:hover{border-color:var(--gold-dim);}
 .game-novel-line{display:flex;gap:10px;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid rgba(196,154,108,.08);}
-.game-novel-speaker{font-size:10px;color:var(--gold-dim);letter-spacing:.06em;flex-shrink:0;width:60px;text-align:right;padding-top:2px;}
+.game-novel-speaker{font-size:10px;color:var(--gold-dim);flex-shrink:0;width:60px;text-align:right;padding-top:2px;}
 .game-novel-text{font-size:12px;color:var(--text-dim);line-height:1.85;}
-
 @keyframes fadeSlideLeft{from{opacity:0;transform:translateX(-24px);}to{opacity:1;transform:translateX(0);}}
 @keyframes fadeSlideRight{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:translateX(0);}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
@@ -366,7 +361,6 @@ html,body{height:100%!important;min-height:100%!important;overflow:hidden!import
       </div>
       <!-- AU BUTTONS -->
       <div class="au-buttons" id="au-buttons"></div>
-      <!-- NAME OVERLAY -->
       <div class="game-name-overlay">
         <div class="game-char-stars" id="game-stars">★★★★★</div>
         <div class="game-char-name" id="game-name">—</div>
@@ -387,7 +381,7 @@ html,body{height:100%!important;min-height:100%!important;overflow:hidden!import
         <div class="game-tab" onclick="switchTab('novel',this)">Novel</div>
       </div>
       <div class="game-tab-content active" id="gtab-info">
-        <div class="game-info-block" id="info-name-block" style="display:none;"></div>
+<div class="game-info-block" id="info-name-block" style="display:none;"></div>
         <div class="game-info-block" id="info-profile-block">
           <div class="game-section-label">기본 정보</div>
           <table class="game-profile-table" id="game-profile-table"></table>
@@ -783,16 +777,7 @@ function previewUrl(url){updateImgPreview(url);}
 function updateImgPreview(src){var preview=document.getElementById('ep-img-preview');var fit=document.getElementById('ep-img-fit').value;var pos=document.getElementById('ep-img-pos').value;if(src)preview.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:'+fit+';object-position:'+pos+'">';else preview.innerHTML='이미지 없음';}
 function updateImgStyle(){var src=document.getElementById('ep-img-data').value.trim();if(src)updateImgPreview(src);}
 function handleGalleryUpload(input){var files=Array.from(input.files);files.forEach(function(file){var reader=new FileReader();reader.onload=function(e){epGalleryData.push(e.target.result);renderGalleryList();};reader.readAsDataURL(file);});}
-function renderGalleryList(){
-  var el=document.getElementById('ep-gallery-list');if(!el)return;
-  if(!epGalleryData.length){el.innerHTML='<div style="font-size:11px;color:var(--text-muted);">갤러리 없음</div>';return;}
-  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">'+epGalleryData.map(function(src,i){
-    return '<div style="position:relative;aspect-ratio:2/3;background:var(--bg3);border:1px solid var(--border);overflow:hidden;">'
-      +'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;object-position:top;">'
-      +'<button onclick="removeGalleryItem('+i+')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border:none;color:#fff;width:20px;height:20px;cursor:pointer;font-size:11px;border-radius:50%;">✕</button>'
-      +'</div>';
-  }).join('')+'</div>';
-}
+function renderGalleryList(){document.getElementById('ep-gallery-list').innerHTML=epGalleryData.map(function(src,i){return'<div style="display:flex;align-items:center;gap:8px;padding:4px;background:var(--bg3);border:1px solid var(--border);"><img src="'+src+'" style="width:36px;height:48px;object-fit:cover;"><div style="flex:1;font-size:10px;color:var(--text-muted);">이미지 '+(i+1)+'</div><button class="btn-del" onclick="removeGalleryItem('+i+')" style="padding:3px 8px;">✕</button></div>';}).join('');}
 function removeGalleryItem(i){epGalleryData.splice(i,1);renderGalleryList();}
 
 // AU VERSIONS
@@ -823,8 +808,7 @@ function handleAUImgUpload(input,i){
     var items=document.querySelectorAll('#ep-au-list .au-edit-item');
     if(items[i]){var imgInput=items[i].querySelector('.au-img');if(imgInput)imgInput.value=e.target.result;}
     updateAUPreview(i,e.target.result);
-  };
-  reader.readAsDataURL(file);
+  };reader.readAsDataURL(file);
 }
 function updateAUPreview(i,src){var el=document.getElementById('au-preview-'+i);if(el)el.innerHTML=src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;">':'';}
 
@@ -900,12 +884,7 @@ function saveChar(){
     var imgEl=item.querySelector('.au-img');
     var imgVal=imgEl?imgEl.value.trim():'';
     if(!imgVal&&epAuData[i])imgVal=epAuData[i].img||'';
-    auVersions.push({
-      label:(item.querySelector('.au-label')||{}).value||'',
-      img:imgVal,
-      imgFit:(item.querySelector('.au-fit')||{}).value||'contain',
-      imgPos:(item.querySelector('.au-pos')||{}).value||'center top'
-    });
+    auVersions.push({label:(item.querySelector('.au-label')||{}).value||'',img:imgVal,imgFit:(item.querySelector('.au-fit')||{}).value||'contain',imgPos:(item.querySelector('.au-pos')||{}).value||'center top'});
   });
   chars[idx]={id:currentChar.id,name:document.getElementById('ep-name').value,nameSub:document.getElementById('ep-namesub').value,role:document.getElementById('ep-role').value,faction:document.getElementById('ep-faction').value,category:document.getElementById('ep-category').value,subcat:document.getElementById('ep-subcat').value,tag:document.getElementById('ep-tag').value,stars:parseInt(document.getElementById('ep-stars').value)||5,img:document.getElementById('ep-img-data').value.trim(),imgFit:document.getElementById('ep-img-fit').value,imgPos:document.getElementById('ep-img-pos').value,desc:document.getElementById('ep-desc').value,story:document.getElementById('ep-story').value,gallery:epGalleryData,novel:chars[idx].novel||[],vnLines:vnLines,profile:profile,theme:{title:document.getElementById('ep-theme-title').value,artist:document.getElementById('ep-theme-artist').value,youtubeId:isFileTheme?'':ytId,fileData:isFileTheme?themeFileData:''},auVersions:auVersions};
   setChars(chars);currentChar=chars[idx];
