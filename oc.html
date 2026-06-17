@@ -65,33 +65,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(26,16,24,0.95);backdrop-fi
 .char-card-role{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
 
 /* ===== GAME UI DETAIL ===== */
-#detail-screen{display:none;position:fixed;inset:0;z-index:400;background:var(--bg);overflow:hidden;}
-#detail-screen.active{display:flex;flex-direction:column;}
 
-.game-topbar{display:flex;align-items:center;gap:1rem;padding:0 1.5rem;height:48px;flex-shrink:0;background:rgba(26,16,24,.97);border-bottom:1px solid var(--border);position:relative;z-index:10;}
-.game-back{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);background:transparent;border:1px solid var(--border);cursor:pointer;font-family:inherit;padding:4px 14px;transition:all .2s;}
-.game-back:hover{border-color:var(--pink-dim);color:var(--pink);}
-.game-topbar-title{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--text-dim);flex:1;}
-.game-topbar-id{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--text-muted);letter-spacing:.1em;}
 .btn-edit{padding:5px 16px;background:transparent;border:1px solid var(--pink-dim);color:var(--pink-dim);font-family:inherit;font-size:10px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
 .btn-edit:hover{background:rgba(130,106,69,.15);color:var(--pink);}
 
-.game-body{flex:1;display:grid;grid-template-columns:1fr 420px;overflow:hidden;}
 
 /* LEFT */
-.game-left{position:relative;overflow:hidden;background:var(--bg2);}
-.game-char-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(130,106,69,.15) 0%,transparent 65%);}
-.game-char-img{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:90%;width:auto;max-width:100%;object-fit:contain;object-position:bottom;}
-.game-char-img.animate-in{animation:charSlideIn .6s cubic-bezier(0.22,1,0.36,1) both;}
 @keyframes charSlideIn{from{opacity:0;transform:translateX(calc(-50% - 40px));}to{opacity:1;transform:translateX(-50%);}}
-.game-char-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;font-size:200px;color:rgba(196,154,108,.04);}
-.game-char-gradient{position:absolute;inset:0;background:linear-gradient(to right,rgba(26,16,24,.05) 0%,transparent 50%,rgba(26,16,24,.6) 100%),linear-gradient(to top,rgba(26,16,24,1) 0%,transparent 25%);}
-.game-corner{position:absolute;width:36px;height:36px;opacity:.35;}
-.game-corner-tl{top:14px;left:14px;border-top:1px solid var(--pink-dim);border-left:1px solid var(--pink-dim);}
-.game-corner-tr{top:14px;right:14px;border-top:1px solid var(--pink-dim);border-right:1px solid var(--pink-dim);}
-.game-corner-bl{bottom:14px;left:14px;border-bottom:1px solid var(--pink-dim);border-left:1px solid var(--pink-dim);}
-.game-corner-br{bottom:14px;right:14px;border-bottom:1px solid var(--pink-dim);border-right:1px solid var(--pink-dim);}
-.game-left::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(196,154,108,.012) 3px,rgba(196,154,108,.012) 4px);pointer-events:none;z-index:1;}
 
 /* AU BUTTONS */
 .au-buttons{position:absolute;bottom:1.5rem;right:1.5rem;z-index:5;display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
@@ -107,44 +87,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(26,16,24,0.95);backdrop-fi
 .theme-artist{font-size:8px;color:var(--text-muted);margin-top:1px;}
 
 /* RIGHT PANEL */
-.game-right{background:rgba(36,26,34,.97);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.game-file-header{padding:1.25rem 1.5rem .75rem;border-bottom:1px solid var(--border);flex-shrink:0;}
-.game-file-label{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem;}
-.game-file-id{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--pink-dim);letter-spacing:.1em;margin-bottom:.6rem;}
-.game-role-badge{display:inline-block;padding:3px 12px;border:1px solid var(--pink-dark);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--pink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;}
 
 /* INFO animate */
-.game-info-block{opacity:0;transform:translateX(20px);transition:opacity .4s,transform .4s;}
-.game-info-block.visible{opacity:1;transform:translateX(0);}
 
-.game-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
-.game-tab{padding:9px 14px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500;}
-.game-tab.active{color:var(--pink);border-bottom-color:var(--pink);}
-.game-tab-content{display:none;flex:1;overflow-y:auto;padding:1.25rem 1.5rem;}
-.game-tab-content::-webkit-scrollbar{width:3px;}
-.game-tab-content::-webkit-scrollbar-thumb{background:var(--pink-dark);}
-.game-tab-content.active{display:block;}
 
-.game-char-name-block{margin-bottom:1.25rem;}
-.game-char-name{font-family:'Playfair Display',serif;font-size:32px;font-style:italic;color:var(--text);line-height:1.1;margin-bottom:4px;}
-.game-char-sub{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--text-muted);letter-spacing:.12em;}
-.game-char-stars{font-size:11px;color:var(--pink-dim);letter-spacing:2px;margin-bottom:.5rem;}
-.game-section-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-dim);margin-bottom:.5rem;margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;}
-.game-section-label:first-child{margin-top:0;}
-.game-profile-table{width:100%;border-collapse:collapse;}
-.game-profile-table tr{border-bottom:1px solid rgba(196,154,108,.07);}
-.game-profile-table tr:last-child{border-bottom:none;}
-.game-profile-table td{padding:7px 0;font-size:12px;}
-.game-profile-table td:first-child{color:var(--text-muted);width:40%;}
-.game-profile-table td:last-child{color:var(--text-dim);}
-.game-desc{font-size:12px;color:var(--text-dim);line-height:1.9;margin-top:.75rem;}
-.game-gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-.game-gallery-item{aspect-ratio:3/4;background:var(--bg3);border:1px solid var(--border);overflow:hidden;}
-.game-gallery-item img{width:100%;height:100%;object-fit:cover;}
-.game-novel-item{padding:10px 0;border-bottom:1px solid rgba(196,154,108,.07);}
-.game-novel-item:last-child{border-bottom:none;}
-.game-novel-title{font-size:13px;color:var(--text);margin-bottom:3px;}
-.game-novel-preview{font-size:11px;color:var(--text-muted);line-height:1.7;}
 .empty-msg{font-size:12px;color:var(--text-muted);text-align:center;padding:2rem;}
 
 /* EDIT PANEL */
@@ -199,49 +145,178 @@ input[type=file]{display:none;}
 #bgm-expand-btn{display:none;background:transparent;border:none;color:var(--pink);cursor:pointer;font-size:16px;width:100%;height:100%;align-items:center;justify-content:center;}
 #bgm-player.collapsed #bgm-expand-btn{display:flex;}
 
-/* ── 상세화면 진입 애니메이션 ── */
-@keyframes fadeSlideLeft{
-  from{opacity:0;transform:translateX(-28px);}
-  to{opacity:1;transform:translateX(0);}
-}
-@keyframes fadeSlideRight{
-  from{opacity:0;transform:translateX(28px);}
-  to{opacity:1;transform:translateX(0);}
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(16px);}
-  to{opacity:1;transform:translateY(0);}
-}
-.detail-anim-left{
-  opacity:0;
-  animation:fadeSlideLeft .7s cubic-bezier(.22,1,.36,1) forwards;
-}
-.detail-anim-right{
-  opacity:0;
-  animation:fadeSlideRight .6s cubic-bezier(.22,1,.36,1) forwards;
-}
-.detail-anim-up{
-  opacity:0;
-  animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;
-}
-/* 왼쪽 패널 (캐릭터 이미지) */
-.game-left{animation:fadeSlideLeft .8s cubic-bezier(.22,1,.36,1) forwards;}
-/* 오른쪽 패널 (정보) */
-.game-right{animation:fadeSlideRight .8s cubic-bezier(.22,1,.36,1) forwards;}
-/* 파일 헤더 */
-.game-file-header{animation:fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;}
-/* 탭 */
-.game-tabs{animation:fadeUp .5s .25s cubic-bezier(.22,1,.36,1) both;}
-/* 정보 블록 개별 딜레이 */
-.game-info-block:nth-child(1){animation-delay:.1s}
-.game-info-block:nth-child(2){animation-delay:.18s}
-.game-info-block:nth-child(3){animation-delay:.26s}
-.game-info-block:nth-child(4){animation-delay:.34s}
-.game-info-block:nth-child(5){animation-delay:.42s}
+/* ═══ DETAIL SCREEN REDESIGN ═══ */
+#detail-screen{display:none;position:fixed;inset:0;z-index:400;background:var(--bg);}
+#detail-screen.active{display:flex;flex-direction:column;}
+
 /* 상단 바 */
-.game-topbar{animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;}
-/* detail-screen 열릴 때 전체 fade */
-#detail-screen.active{animation:none;}
+.game-topbar{
+  height:44px;background:rgba(10,8,6,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.5rem;gap:1rem;flex-shrink:0;
+  animation:fadeUp .4s ease both;
+}
+.game-back{
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);background:transparent;border:1px solid var(--border);
+  padding:5px 12px;cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.game-back:hover{border-color:var(--gold-dim);color:var(--gold);}
+.game-topbar-title{flex:1;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-muted);}
+.game-topbar-id{font-size:9px;letter-spacing:.15em;color:var(--text-muted);}
+.btn-edit{padding:5px 14px;background:transparent;border:1px solid var(--gold-dim);color:var(--gold-dim);font-family:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer;transition:all .2s;}
+.btn-edit:hover{background:rgba(196,154,108,.1);color:var(--gold);}
+
+/* 본문 레이아웃: 좌 2/5, 우 3/5 */
+.game-body{flex:1;display:grid;grid-template-columns:2fr 3fr;overflow:hidden;}
+
+/* ── 왼쪽: 캐릭터 일러스트 + 이름 오버레이 ── */
+.game-left{
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--bg2) 0%,var(--bg) 100%);
+  animation:fadeSlideLeft .7s cubic-bezier(.22,1,.36,1) both;
+}
+.game-char-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 60% 40%,rgba(196,154,108,.07),transparent 65%);
+}
+.game-char-placeholder{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-style:italic;font-size:80px;
+  color:rgba(196,154,108,.06);
+}
+.game-char-img{
+  position:absolute;bottom:0;left:0;right:0;
+  width:100%;height:95%;object-fit:cover;object-position:top center;
+  display:block;
+}
+.game-char-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(15,12,9,1) 0%,rgba(15,12,9,.5) 30%,transparent 65%),
+             linear-gradient(to right,rgba(15,12,9,.4) 0%,transparent 40%);
+}
+
+/* 왼쪽 이름 오버레이 */
+.game-name-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:1.5rem 1.75rem 1.25rem;
+}
+.game-char-stars{
+  font-size:13px;color:var(--gold);letter-spacing:3px;
+  margin-bottom:.5rem;
+  animation:fadeSlideLeft .6s .15s cubic-bezier(.22,1,.36,1) both;
+}
+.game-char-name{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(28px,3.5vw,46px);color:var(--text);
+  line-height:1;letter-spacing:-.01em;
+  animation:fadeSlideLeft .7s .1s cubic-bezier(.22,1,.36,1) both;
+}
+.game-char-sub{
+  font-size:12px;color:var(--gold-dim);letter-spacing:.1em;margin-top:.3rem;
+  animation:fadeSlideLeft .6s .2s cubic-bezier(.22,1,.36,1) both;
+}
+.game-role-badge{
+  display:inline-block;margin-top:.5rem;
+  padding:3px 10px;border:1px solid var(--gold-dark);
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);
+  animation:fadeSlideLeft .5s .25s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* 코너 장식 */
+.game-corner{position:absolute;width:18px;height:18px;border-color:rgba(196,154,108,.3);border-style:solid;}
+.game-corner-tl{top:10px;left:10px;border-width:1px 0 0 1px;}
+.game-corner-tr{top:10px;right:10px;border-width:1px 1px 0 0;}
+.game-corner-bl{bottom:10px;left:10px;border-width:0 0 1px 1px;}
+.game-corner-br{bottom:10px;right:10px;border-width:0 1px 1px 0;}
+
+/* AU 버튼 */
+.au-buttons{
+  position:absolute;top:1rem;left:1rem;
+  display:flex;gap:6px;flex-wrap:wrap;
+}
+.au-btn{
+  padding:4px 10px;background:rgba(10,8,6,.75);
+  border:1px solid var(--border);color:var(--text-muted);
+  cursor:pointer;font-size:9px;letter-spacing:.1em;font-family:inherit;
+  backdrop-filter:blur(6px);transition:all .2s;
+}
+.au-btn.active,.au-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
+
+/* 테마 플레이어 */
+.theme-player{
+  position:absolute;bottom:1rem;right:1rem;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(10,8,6,.82);border:1px solid var(--border);
+  padding:6px 10px;backdrop-filter:blur(8px);min-width:180px;
+}
+.theme-play-btn{
+  width:26px;height:26px;background:transparent;
+  border:1px solid var(--gold-dim);color:var(--gold);
+  cursor:pointer;font-size:10px;flex-shrink:0;transition:all .2s;
+}
+.theme-play-btn:hover{background:rgba(196,154,108,.15);}
+.theme-info{flex:1;min-width:0;}
+.theme-title{font-size:10px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.theme-artist{font-size:9px;color:var(--text-muted);}
+
+/* ── 오른쪽: 정보 패널 ── */
+.game-right{
+  overflow-y:auto;display:flex;flex-direction:column;
+  background:rgba(10,8,6,.3);border-left:1px solid var(--border);
+  animation:fadeSlideRight .7s cubic-bezier(.22,1,.36,1) both;
+}
+.game-right::-webkit-scrollbar{width:2px;}
+.game-right::-webkit-scrollbar-thumb{background:var(--gold-dark);}
+
+/* 파일 헤더 */
+.game-file-header{
+  padding:1.25rem 1.5rem 1rem;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+  animation:fadeUp .5s .1s cubic-bezier(.22,1,.36,1) both;
+}
+.game-file-label{font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px;font-family:'Cormorant Garamond',serif;font-style:italic;}
+.game-file-id{font-size:10px;color:var(--text-muted);letter-spacing:.12em;}
+
+/* 탭 */
+.game-tabs{
+  display:flex;border-bottom:1px solid var(--border);flex-shrink:0;
+  animation:fadeUp .5s .15s cubic-bezier(.22,1,.36,1) both;
+}
+.game-tab{
+  padding:8px 18px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;
+}
+.game-tab.active,.game-tab:hover{color:var(--gold);border-bottom-color:var(--gold);}
+.game-tab-content{display:none;padding:1.25rem 1.5rem;flex:1;}
+.game-tab-content.active{display:block;animation:fadeUp .4s .1s cubic-bezier(.22,1,.36,1) both;}
+
+/* 정보 블록 */
+.game-info-block{margin-bottom:1.25rem;}
+.game-section-label{
+  font-size:8px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:.6rem;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  padding-bottom:.4rem;border-bottom:1px solid var(--border);
+}
+.game-profile-table{width:100%;border-collapse:collapse;}
+.game-profile-table tr{border-bottom:1px solid rgba(196,154,108,.1);}
+.game-profile-table td{padding:6px 0;font-size:12px;vertical-align:top;}
+.game-profile-table td:first-child{color:var(--text-muted);width:90px;font-size:10px;letter-spacing:.05em;}
+.game-profile-table td:last-child{color:var(--text-dim);}
+.game-desc{font-size:12px;color:var(--text-dim);line-height:1.9;white-space:pre-wrap;}
+.game-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.game-gallery-img{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:top;border:1px solid var(--border);cursor:pointer;transition:border-color .2s;}
+.game-gallery-img:hover{border-color:var(--gold-dim);}
+.game-novel-line{display:flex;gap:10px;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid rgba(196,154,108,.08);}
+.game-novel-speaker{font-size:10px;color:var(--gold-dim);letter-spacing:.06em;flex-shrink:0;width:60px;text-align:right;padding-top:2px;}
+.game-novel-text{font-size:12px;color:var(--text-dim);line-height:1.85;}
+
+/* 애니메이션 */
+@keyframes fadeSlideLeft{from{opacity:0;transform:translateX(-24px);}to{opacity:1;transform:translateX(0);}}
+@keyframes fadeSlideRight{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:translateX(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 </style>
 <style id="lakehouse-codex-css">
 :root{--lake-ink:#0b0d0c;--lake-panel:rgba(16,18,16,.86);--lake-panel-2:rgba(29,31,28,.78);--lake-copper:#d7a982;--lake-copper-soft:#f0cfad;--lake-copper-deep:#9f7358;--lake-mist:#d8d5cb;--lake-muted:rgba(216,213,203,.58);--lake-line:rgba(215,169,130,.42);--lake-line-soft:rgba(215,169,130,.18);--lake-green:#7e8a7c;--lake-rose:#b98375}
@@ -395,6 +470,13 @@ html,body{height:100%!important;min-height:100%!important;overflow:hidden!import
       </div>
       <!-- AU BUTTONS -->
       <div class="au-buttons" id="au-buttons"></div>
+      <!-- NAME OVERLAY -->
+      <div class="game-name-overlay">
+        <div class="game-char-stars" id="game-stars">★★★★★</div>
+        <div class="game-char-name" id="game-name">—</div>
+        <div class="game-char-sub" id="game-sub"></div>
+        <div class="game-role-badge" id="game-role">—</div>
+      </div>
     </div>
     <div class="game-right">
       <div class="game-file-header">
@@ -409,14 +491,7 @@ html,body{height:100%!important;min-height:100%!important;overflow:hidden!import
         <div class="game-tab" onclick="switchTab('novel',this)">Novel</div>
       </div>
       <div class="game-tab-content active" id="gtab-info">
-        <div class="game-info-block" id="info-name-block">
-          <div class="game-char-stars" id="game-stars">★★★★★</div>
-          <div class="game-char-name-block">
-            <div class="game-char-name" id="game-name">—</div>
-            <div class="game-char-sub" id="game-sub">—</div>
-          </div>
-          <div class="game-role-badge" id="game-role2" style="margin-bottom:1rem;">—</div>
-        </div>
+        <div class="game-info-block" id="info-name-block" style="display:none;"></div>
         <div class="game-info-block" id="info-profile-block">
           <div class="game-section-label">기본 정보</div>
           <table class="game-profile-table" id="game-profile-table"></table>
@@ -750,18 +825,6 @@ function openDetail(c,auIdx){
 
   document.getElementById('btn-edit').style.display=window._isAdmin?'block':'none';
   switchTab('info',document.querySelector('.game-tab'));
-  // 애니메이션 리셋 (재진입 시에도 재실행)
-  var gameLeft = document.querySelector('.game-left');
-  var gameRight = document.querySelector('.game-right');
-  [gameLeft, gameRight].forEach(function(el){
-    if(!el)return;
-    el.style.animation='none';
-    el.offsetHeight; // reflow
-    el.style.animation='';
-  });
-  document.querySelectorAll('.game-info-block').forEach(function(b){
-    b.style.animation='none';b.offsetHeight;b.style.animation='';
-  });
   document.getElementById('detail-screen').classList.add('active');
 }
 
@@ -824,7 +887,17 @@ function previewUrl(url){updateImgPreview(url);}
 function updateImgPreview(src){var preview=document.getElementById('ep-img-preview');var fit=document.getElementById('ep-img-fit').value;var pos=document.getElementById('ep-img-pos').value;if(src)preview.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:'+fit+';object-position:'+pos+'">';else preview.innerHTML='이미지 없음';}
 function updateImgStyle(){var src=document.getElementById('ep-img-data').value.trim();if(src)updateImgPreview(src);}
 function handleGalleryUpload(input){var files=Array.from(input.files);files.forEach(function(file){var reader=new FileReader();reader.onload=function(e){epGalleryData.push(e.target.result);renderGalleryList();};reader.readAsDataURL(file);});}
-function renderGalleryList(){document.getElementById('ep-gallery-list').innerHTML=epGalleryData.map(function(src,i){return'<div style="display:flex;align-items:center;gap:8px;padding:4px;background:var(--bg3);border:1px solid var(--border);"><img src="'+src+'" style="width:36px;height:48px;object-fit:cover;"><div style="flex:1;font-size:10px;color:var(--text-muted);">이미지 '+(i+1)+'</div><button class="btn-del" onclick="removeGalleryItem('+i+')" style="padding:3px 8px;">✕</button></div>';}).join('');}
+function renderGalleryList(){
+  var el=document.getElementById('ep-gallery-list');
+  if(!el)return;
+  if(!epGalleryData.length){el.innerHTML='<div style="font-size:11px;color:var(--text-muted);">갤러리 없음</div>';return;}
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">'+epGalleryData.map(function(src,i){
+    return '<div style="position:relative;aspect-ratio:2/3;background:var(--bg3);border:1px solid var(--border);overflow:hidden;">'
+      +'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;object-position:top;">'
+      +'<button onclick="removeGalleryItem('+i+')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border:none;color:#fff;width:20px;height:20px;cursor:pointer;font-size:11px;border-radius:50%;">✕</button>'
+      +'</div>';
+  }).join('')+'</div>';
+}
 function removeGalleryItem(i){epGalleryData.splice(i,1);renderGalleryList();}
 
 // AU VERSIONS
@@ -850,9 +923,10 @@ function handleAUImgUpload(input,i){
   var file=input.files[0];if(!file)return;
   var reader=new FileReader();
   reader.onload=function(e){
-    // epAuData에도 저장
-    if(epAuData[i])epAuData[i].img=e.target.result;
-    // DOM input도 업데이트 (saveChar에서 읽음)
+    // epAuData 업데이트
+    if(!epAuData[i])epAuData[i]={label:'',img:'',imgFit:'contain',imgPos:'center top'};
+    epAuData[i].img=e.target.result;
+    // DOM input도 업데이트
     var items=document.querySelectorAll('#ep-au-list .au-edit-item');
     if(items[i]){
       var imgInput=items[i].querySelector('.au-img');
@@ -930,22 +1004,19 @@ function saveChar(){
   var themeFileData = document.getElementById('ep-theme-file-data') ? document.getElementById('ep-theme-file-data').value : '';
   var ytRaw=document.getElementById('ep-theme-yt').value.trim();
   var m=ytRaw.match(/(?:youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{11})/);var ytId=m?m[1]:ytRaw;
-  // collect AU (DOM 기반)
+  // collect AU - DOM 기반 (인덱스 제한 없음)
   var auVersions=[];
-  document.querySelectorAll('#ep-au-list .au-edit-item').forEach(function(item){
-    var labelEl=item.querySelector('.au-label');
+  document.querySelectorAll('#ep-au-list .au-edit-item').forEach(function(item,i){
+    var label=(item.querySelector('.au-label')||{}).value||'';
     var imgEl=item.querySelector('.au-img');
-    var fitEl=item.querySelector('.au-fit');
-    var posEl=item.querySelector('.au-pos');
-    var imgVal=(imgEl?imgEl.value.trim():'');
-    // 파일 데이터 확인 (hidden input)
-    var fileEl=item.querySelector('.au-file-data');
-    if(fileEl&&fileEl.value)imgVal=fileEl.value;
+    var imgVal=imgEl?imgEl.value.trim():'';
+    // 파일로 올린 경우 epAuData에 저장돼 있음
+    if(!imgVal&&epAuData[i])imgVal=epAuData[i].img||'';
     auVersions.push({
-      label:labelEl?labelEl.value:'',
+      label:label,
       img:imgVal,
-      imgFit:fitEl?fitEl.value:'contain',
-      imgPos:posEl?posEl.value:'center top'
+      imgFit:(item.querySelector('.au-fit')||{}).value||'contain',
+      imgPos:(item.querySelector('.au-pos')||{}).value||'center top'
     });
   });
   chars[idx]={id:currentChar.id,name:document.getElementById('ep-name').value,nameSub:document.getElementById('ep-namesub').value,role:document.getElementById('ep-role').value,faction:document.getElementById('ep-faction').value,category:document.getElementById('ep-category').value,subcat:document.getElementById('ep-subcat').value,tag:document.getElementById('ep-tag').value,stars:parseInt(document.getElementById('ep-stars').value)||5,img:document.getElementById('ep-img-data').value.trim(),imgFit:document.getElementById('ep-img-fit').value,imgPos:document.getElementById('ep-img-pos').value,desc:document.getElementById('ep-desc').value,story:document.getElementById('ep-story').value,gallery:epGalleryData,novel:chars[idx].novel||[],vnLines:vnLines,profile:profile,theme:{title:document.getElementById('ep-theme-title').value,artist:document.getElementById('ep-theme-artist').value,youtubeId:isFileTheme?'':ytId,fileData:isFileTheme?themeFileData:''},auVersions:auVersions};
@@ -1323,7 +1394,7 @@ if(window.syncOCFromFirebase){
   function hexToRgba(hex,a){hex=String(hex||'#101210').replace('#','');if(hex.length===3)hex=hex.split('').map(function(x){return x+x}).join('');var n=parseInt(hex,16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'}
   function extraInfo(c){var host=$('gtab-info');if(!host)return;var old=host.querySelector('.lh-info-extra');if(old)old.remove();var pieces=[];if(c.special)pieces.push(['특이사항',c.special]);if(c.hobby)pieces.push(['취미 / 특기',c.hobby]);if(arr(c.keywords).length)pieces.push(['KEYWORD',arr(c.keywords).join(' · ')]);if(arr(c.likes).length)pieces.push(['LIKE',arr(c.likes).join(' · ')]);if(arr(c.hates).length)pieces.push(['HATE',arr(c.hates).join(' · ')]);if(arr(c.items).length)pieces.push(['소지품',arr(c.items).join(' · ')]);if(!pieces.length)return;host.insertAdjacentHTML('beforeend','<div class="lh-info-extra">'+pieces.map(function(p){return'<div class="lh-info-piece"><div class="lh-info-piece-title">'+esc(p[0])+'</div><div class="lh-info-piece-body">'+esc(p[1])+'</div></div>'}).join('')+'</div>')}
   var oldOpenDetail=window.openDetail;window.openDetail=function(c,auIdx){var fresh=c;if(c&&c.id!=null){var found=arr(getChars()).find(function(x){return String(x.id)===String(c.id)});if(found)fresh=found}window.currentChar=fresh;try{currentChar=fresh}catch(e){}if(oldOpenDetail)oldOpenDetail(fresh,auIdx);setTimeout(function(){applyColors(fresh);extraInfo(fresh);document.querySelectorAll('.lh-info-piece,.game-profile-table tr,.lh-side-panel .lh-profile-line,.lh-side-panel .lh-stat,.lh-side-panel .lh-chip').forEach(function(el){el.style.animation='none';void el.offsetWidth;el.style.animation=''})},0)};
-  // tilt effect removed
+  
   document.addEventListener('mouseleave',function(){var screen=$('detail-screen'),body=screen&&screen.querySelector('.game-body');if(body)body.style.transform=''},true);
   var typingTimer=0,typingDone=true,dialoguePos=0;
   function currentDialogue(){var id=window.currentChar&&window.currentChar.id;var fresh=arr(getChars()).find(function(c){return String(c.id)===String(id)});return arr((fresh||window.currentChar||{}).dialogue)}
