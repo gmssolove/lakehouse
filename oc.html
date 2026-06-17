@@ -199,8 +199,49 @@ input[type=file]{display:none;}
 #bgm-expand-btn{display:none;background:transparent;border:none;color:var(--pink);cursor:pointer;font-size:16px;width:100%;height:100%;align-items:center;justify-content:center;}
 #bgm-player.collapsed #bgm-expand-btn{display:flex;}
 
-.game-body{will-change:transform;transform-style:preserve-3d;}
-.game-char-img{will-change:transform;transition:transform .05s linear;}
+/* ── 상세화면 진입 애니메이션 ── */
+@keyframes fadeSlideLeft{
+  from{opacity:0;transform:translateX(-28px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes fadeSlideRight{
+  from{opacity:0;transform:translateX(28px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.detail-anim-left{
+  opacity:0;
+  animation:fadeSlideLeft .7s cubic-bezier(.22,1,.36,1) forwards;
+}
+.detail-anim-right{
+  opacity:0;
+  animation:fadeSlideRight .6s cubic-bezier(.22,1,.36,1) forwards;
+}
+.detail-anim-up{
+  opacity:0;
+  animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;
+}
+/* 왼쪽 패널 (캐릭터 이미지) */
+.game-left{animation:fadeSlideLeft .8s cubic-bezier(.22,1,.36,1) forwards;}
+/* 오른쪽 패널 (정보) */
+.game-right{animation:fadeSlideRight .8s cubic-bezier(.22,1,.36,1) forwards;}
+/* 파일 헤더 */
+.game-file-header{animation:fadeUp .6s .15s cubic-bezier(.22,1,.36,1) both;}
+/* 탭 */
+.game-tabs{animation:fadeUp .5s .25s cubic-bezier(.22,1,.36,1) both;}
+/* 정보 블록 개별 딜레이 */
+.game-info-block:nth-child(1){animation-delay:.1s}
+.game-info-block:nth-child(2){animation-delay:.18s}
+.game-info-block:nth-child(3){animation-delay:.26s}
+.game-info-block:nth-child(4){animation-delay:.34s}
+.game-info-block:nth-child(5){animation-delay:.42s}
+/* 상단 바 */
+.game-topbar{animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;}
+/* detail-screen 열릴 때 전체 fade */
+#detail-screen.active{animation:none;}
 </style>
 <style id="lakehouse-codex-css">
 :root{--lake-ink:#0b0d0c;--lake-panel:rgba(16,18,16,.86);--lake-panel-2:rgba(29,31,28,.78);--lake-copper:#d7a982;--lake-copper-soft:#f0cfad;--lake-copper-deep:#9f7358;--lake-mist:#d8d5cb;--lake-muted:rgba(216,213,203,.58);--lake-line:rgba(215,169,130,.42);--lake-line-soft:rgba(215,169,130,.18);--lake-green:#7e8a7c;--lake-rose:#b98375}
@@ -709,6 +750,18 @@ function openDetail(c,auIdx){
 
   document.getElementById('btn-edit').style.display=window._isAdmin?'block':'none';
   switchTab('info',document.querySelector('.game-tab'));
+  // 애니메이션 리셋 (재진입 시에도 재실행)
+  var gameLeft = document.querySelector('.game-left');
+  var gameRight = document.querySelector('.game-right');
+  [gameLeft, gameRight].forEach(function(el){
+    if(!el)return;
+    el.style.animation='none';
+    el.offsetHeight; // reflow
+    el.style.animation='';
+  });
+  document.querySelectorAll('.game-info-block').forEach(function(b){
+    b.style.animation='none';b.offsetHeight;b.style.animation='';
+  });
   document.getElementById('detail-screen').classList.add('active');
 }
 
@@ -793,7 +846,22 @@ function renderAUList(){
 }
 function addAUItem(){epAuData.push({label:'',img:'',imgFit:'contain',imgPos:'center top'});renderAUList();}
 function removeAU(i){epAuData.splice(i,1);renderAUList();}
-function handleAUImgUpload(input,i){var file=input.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){epAuData[i].img=e.target.result;updateAUPreview(i,e.target.result);};reader.readAsDataURL(file);}
+function handleAUImgUpload(input,i){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    // epAuData에도 저장
+    if(epAuData[i])epAuData[i].img=e.target.result;
+    // DOM input도 업데이트 (saveChar에서 읽음)
+    var items=document.querySelectorAll('#ep-au-list .au-edit-item');
+    if(items[i]){
+      var imgInput=items[i].querySelector('.au-img');
+      if(imgInput)imgInput.value=e.target.result;
+    }
+    updateAUPreview(i,e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
 function updateAUPreview(i,src){var el=document.getElementById('au-preview-'+i);if(el)el.innerHTML=src?'<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;">':'';}
 
 // PROFILE DRAG
@@ -862,12 +930,23 @@ function saveChar(){
   var themeFileData = document.getElementById('ep-theme-file-data') ? document.getElementById('ep-theme-file-data').value : '';
   var ytRaw=document.getElementById('ep-theme-yt').value.trim();
   var m=ytRaw.match(/(?:youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{11})/);var ytId=m?m[1]:ytRaw;
-  // collect AU
-  var auItems=document.querySelectorAll('#ep-au-list .au-edit-item');
+  // collect AU (DOM 기반)
   var auVersions=[];
-  auItems.forEach(function(item,i){
-    if(i>=epAuData.length)return;
-    auVersions.push({label:item.querySelector('.au-label').value,img:item.querySelector('.au-img').value.trim()||epAuData[i].img||'',imgFit:item.querySelector('.au-fit').value,imgPos:item.querySelector('.au-pos').value});
+  document.querySelectorAll('#ep-au-list .au-edit-item').forEach(function(item){
+    var labelEl=item.querySelector('.au-label');
+    var imgEl=item.querySelector('.au-img');
+    var fitEl=item.querySelector('.au-fit');
+    var posEl=item.querySelector('.au-pos');
+    var imgVal=(imgEl?imgEl.value.trim():'');
+    // 파일 데이터 확인 (hidden input)
+    var fileEl=item.querySelector('.au-file-data');
+    if(fileEl&&fileEl.value)imgVal=fileEl.value;
+    auVersions.push({
+      label:labelEl?labelEl.value:'',
+      img:imgVal,
+      imgFit:fitEl?fitEl.value:'contain',
+      imgPos:posEl?posEl.value:'center top'
+    });
   });
   chars[idx]={id:currentChar.id,name:document.getElementById('ep-name').value,nameSub:document.getElementById('ep-namesub').value,role:document.getElementById('ep-role').value,faction:document.getElementById('ep-faction').value,category:document.getElementById('ep-category').value,subcat:document.getElementById('ep-subcat').value,tag:document.getElementById('ep-tag').value,stars:parseInt(document.getElementById('ep-stars').value)||5,img:document.getElementById('ep-img-data').value.trim(),imgFit:document.getElementById('ep-img-fit').value,imgPos:document.getElementById('ep-img-pos').value,desc:document.getElementById('ep-desc').value,story:document.getElementById('ep-story').value,gallery:epGalleryData,novel:chars[idx].novel||[],vnLines:vnLines,profile:profile,theme:{title:document.getElementById('ep-theme-title').value,artist:document.getElementById('ep-theme-artist').value,youtubeId:isFileTheme?'':ytId,fileData:isFileTheme?themeFileData:''},auVersions:auVersions};
   setChars(chars);currentChar=chars[idx];
@@ -1244,50 +1323,7 @@ if(window.syncOCFromFirebase){
   function hexToRgba(hex,a){hex=String(hex||'#101210').replace('#','');if(hex.length===3)hex=hex.split('').map(function(x){return x+x}).join('');var n=parseInt(hex,16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'}
   function extraInfo(c){var host=$('gtab-info');if(!host)return;var old=host.querySelector('.lh-info-extra');if(old)old.remove();var pieces=[];if(c.special)pieces.push(['특이사항',c.special]);if(c.hobby)pieces.push(['취미 / 특기',c.hobby]);if(arr(c.keywords).length)pieces.push(['KEYWORD',arr(c.keywords).join(' · ')]);if(arr(c.likes).length)pieces.push(['LIKE',arr(c.likes).join(' · ')]);if(arr(c.hates).length)pieces.push(['HATE',arr(c.hates).join(' · ')]);if(arr(c.items).length)pieces.push(['소지품',arr(c.items).join(' · ')]);if(!pieces.length)return;host.insertAdjacentHTML('beforeend','<div class="lh-info-extra">'+pieces.map(function(p){return'<div class="lh-info-piece"><div class="lh-info-piece-title">'+esc(p[0])+'</div><div class="lh-info-piece-body">'+esc(p[1])+'</div></div>'}).join('')+'</div>')}
   var oldOpenDetail=window.openDetail;window.openDetail=function(c,auIdx){var fresh=c;if(c&&c.id!=null){var found=arr(getChars()).find(function(x){return String(x.id)===String(c.id)});if(found)fresh=found}window.currentChar=fresh;try{currentChar=fresh}catch(e){}if(oldOpenDetail)oldOpenDetail(fresh,auIdx);setTimeout(function(){applyColors(fresh);extraInfo(fresh);document.querySelectorAll('.lh-info-piece,.game-profile-table tr,.lh-side-panel .lh-profile-line,.lh-side-panel .lh-stat,.lh-side-panel .lh-chip').forEach(function(el){el.style.animation='none';void el.offsetWidth;el.style.animation=''})},0)};
-  // Tilt effect: RAF + CSS transition (성능 최적화)
-(function(){
-  var raf=null, tx=0, ty=0, cx=0, cy=0;
-  var LERP=0.08; // 부드러운 추적 속도 (낮을수록 느리게)
-  var MAX_X=4, MAX_Y=3; // 최대 기울기 (도)
-  function lerp(a,b,t){return a+(b-a)*t;}
-  function loop(){
-    cx=lerp(cx,tx,LERP);
-    cy=lerp(cy,ty,LERP);
-    var body=document.querySelector('#detail-screen.active .game-body');
-    var img=document.querySelector('#detail-screen.active .game-char-img');
-    if(body){
-      // game-body 전체 기울기
-      body.style.transform='perspective(1400px) rotateY('+cx.toFixed(3)+'deg) rotateX('+(-cy).toFixed(3)+'deg)';
-    }
-    if(img){
-      // 캐릭터 이미지 반대 방향으로 살짝 더 기울어서 입체감
-      img.style.transform='perspective(1400px) rotateY('+(cx*1.5).toFixed(3)+'deg) rotateX('+(-cy*1.2).toFixed(3)+'deg) scale(1.02)';
-    }
-    if(Math.abs(cx-tx)>0.01||Math.abs(cy-ty)>0.01) raf=requestAnimationFrame(loop);
-    else raf=null;
-  }
-  document.addEventListener('mousemove',function(e){
-    var screen=document.getElementById('detail-screen');
-    if(!screen||!screen.classList.contains('active'))return;
-    var r=screen.getBoundingClientRect();
-    tx=(e.clientX-r.left)/r.width*2-1; // -1 ~ 1
-    ty=(e.clientY-r.top)/r.height*2-1;
-    tx*=MAX_X; ty*=MAX_Y;
-    if(!raf)raf=requestAnimationFrame(loop);
-  },{passive:true});
-  // 마우스 나가면 원위치로
-  document.addEventListener('mouseleave',function(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop);});
-  // 디테일 닫힐 때 초기화
-  var oldClose=window.closeDetail;
-  window.closeDetail=function(){
-    tx=0;ty=0;cx=0;cy=0;
-    var body=document.querySelector('#detail-screen .game-body');
-    var img=document.querySelector('#detail-screen .game-char-img');
-    if(body)body.style.transform='';
-    if(img)img.style.transform='';
-    if(oldClose)oldClose();
-  };
-})();
+  // tilt effect removed
   document.addEventListener('mouseleave',function(){var screen=$('detail-screen'),body=screen&&screen.querySelector('.game-body');if(body)body.style.transform=''},true);
   var typingTimer=0,typingDone=true,dialoguePos=0;
   function currentDialogue(){var id=window.currentChar&&window.currentChar.id;var fresh=arr(getChars()).find(function(c){return String(c.id)===String(id)});return arr((fresh||window.currentChar||{}).dialogue)}

@@ -186,29 +186,35 @@ nav{display:flex;flex-direction:column;gap:2px;}
 #bgm-player.collapsed #bgm-expand-btn{display:flex;}
 
 /* 배너 타일 */
-.lh-banner-tile{position:relative;width:88px;height:31px;background:var(--bg2);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:border-color .2s;}
+#public-banner-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:.75rem;}
+.lh-banner-tile{
+  position:relative;width:176px;height:62px;
+  background:var(--bg2);border:1px solid var(--border);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s;
+}
 a:hover .lh-banner-tile{border-color:var(--gold-dim,var(--pink-dim));}
-.lh-banner-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(15,12,9,.95);border:1px solid var(--border);color:var(--text-dim);font-size:10px;padding:4px 8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;letter-spacing:.06em;}
-.lh-banner-tile:hover .lh-banner-tooltip{opacity:1;}
-/* 배너 목록 컨테이너 */
-#public-banner-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem;}
+.lh-banner-name{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,8,6,.82);
+  color:var(--gold-light,var(--pink-light));
+  font-size:11px;letter-spacing:.08em;
+  opacity:0;
+  transition:opacity .22s ease;
+}
+.lh-banner-tile:hover .lh-banner-name{opacity:1;}
 
-/* OC 대사 커스텀 레이아웃 정리 */
-.lh-oc-admin-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:var(--bg2);border:1px solid var(--border);}
-.lh-oc-admin-row .lh-oc-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.lh-oc-admin-row textarea.form-input{width:100%;min-height:60px;}
-.lh-oc-admin-actions{display:flex;gap:6px;margin-top:4px;}
-.lh-oc-admin-row-wide{display:flex;flex-direction:column;gap:6px;}
-
-/* 배너 관리자 패널 */
-.lh-banner-editor{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;}
-.lh-banner-preview{width:88px;height:31px;background:var(--bg3);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-muted);}
-.lh-banner-preview img{width:100%;height:100%;object-fit:contain;}
-.lh-banner-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+/* 배너 관리자 */
+.lh-banner-editor{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;max-width:480px;}
+.lh-banner-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);flex-wrap:nowrap;}
 .lh-banner-thumb{width:88px;height:31px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .lh-banner-thumb img{width:100%;height:100%;object-fit:contain;}
-.lh-banner-row-actions{display:flex;gap:4px;flex-shrink:0;margin-left:auto;}
-.lh-banner-mini{padding:3px 8px!important;font-size:9px!important;}
+.lh-banner-row .admin-item-name{flex:1;min-width:0;font-size:11px;}
+.lh-banner-row-actions{display:flex;gap:4px;flex-shrink:0;}
+.lh-banner-mini{padding:4px 8px!important;font-size:9px!important;}
+.adm-banner-preview{width:176px;height:62px;background:var(--bg3);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-muted);margin:.5rem 0;}
+.adm-banner-preview img{width:100%;height:100%;object-fit:contain;}
 </style>
 <style id="lakehouse-codex-css">
 :root{--lake-ink:#0b0d0c;--lake-panel:rgba(16,18,16,.86);--lake-panel-2:rgba(29,31,28,.78);--lake-copper:#d7a982;--lake-copper-soft:#f0cfad;--lake-copper-deep:#9f7358;--lake-mist:#d8d5cb;--lake-muted:rgba(216,213,203,.58);--lake-line:rgba(215,169,130,.42);--lake-line-soft:rgba(215,169,130,.18);--lake-green:#7e8a7c;--lake-rose:#b98375}
@@ -436,8 +442,7 @@ html,body{overflow:hidden!important;}
 </style>
 <style id="lakehouse-guest-align-fix-css">
 #page-guest .guest-container{width:460px!important;max-width:100%!important;}
-#page-guest #guest-list,
-#page-guest #guest-login-notice,
+#page-guest #guest-list,#page-guest #guest-login-notice,
 #page-guest #guest-form-inner{transform:none!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-left:0!important;}
 </style>
 <style id="lakehouse-banner-trpg-fix-css">
@@ -1639,13 +1644,13 @@ function renderPublicBanner(){
   if(!el)return;
   if(!list||!list.length){el.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
+  function escB(s){return String(s==null?'':s).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
   el.innerHTML=list.map(function(b){
-    var esc=function(s){return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});};
     var imgHtml=b.img
-      ?'<img src="'+esc(b.img)+'" alt="'+esc(b.name)+'" style="width:100%;height:100%;object-fit:contain;display:block;">'
-      :'<span style="font-size:10px;color:var(--text-muted);padding:4px;">'+esc(b.name)+'</span>';
-    var inner='<div class="lh-banner-tile" title="'+esc(b.name)+'">'+imgHtml+'<div class="lh-banner-tooltip">'+esc(b.name)+'</div></div>';
-    return b.url?'<a href="'+esc(b.url)+'" target="_blank" rel="noopener" style="text-decoration:none;">'+inner+'</a>':inner;
+      ?'<img src="'+escB(b.img)+'" alt="'+escB(b.name)+'" style="width:100%;height:100%;object-fit:contain;display:block;">'
+      :'<span style="font-size:10px;color:var(--text-muted);padding:4px;">'+escB(b.name)+'</span>';
+    var inner='<div class="lh-banner-tile">'+imgHtml+'<div class="lh-banner-name">'+escB(b.name)+'</div></div>';
+    return b.url?'<a href="'+escB(b.url)+'" target="_blank" rel="noopener" style="text-decoration:none;">'+inner+'</a>':inner;
   }).join('');
 }
 
@@ -1867,7 +1872,7 @@ document.querySelectorAll('.auth-input').forEach(function(inp){inp.addEventListe
 </script>
 <style id="lakehouse-index-oc-admin-extended-css">
 #oc-char-edit-panel{border-radius:12px!important;background:linear-gradient(135deg,rgba(22,25,23,.92),rgba(10,12,11,.92))!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
-.lh-oc-admin-block{border:1px solid rgba(215,169,130,.2);background:rgba(215,169,130,.045);border-radius:12px;padding:12px;margin:12px 0}.lh-oc-admin-title{font-size:11px;color:var(--lake-copper-soft,var(--pink));letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.lh-oc-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lh-oc-admin-row{display:grid;grid-template-columns:minmax(90px,.8fr) minmax(0,1.2fr) auto;gap:6px;align-items:center;margin-bottom:6px}.lh-oc-admin-row textarea{grid-column:1/3}.lh-oc-admin-row-wide{grid-template-columns:minmax(0,1fr)}.lh-oc-admin-mini{font-size:10px;color:var(--text-muted);line-height:1.55}.lh-oc-admin-actions{display:flex;gap:6px;flex-wrap:wrap}.lh-oc-admin-file{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:0 12px;border:1px solid rgba(215,169,130,.28);border-radius:999px;background:rgba(215,169,130,.07);color:var(--text-muted);cursor:pointer;font-size:11px}.lh-oc-admin-file input{display:none}.lh-oc-admin-remove{border:1px solid rgba(215,169,130,.2);background:transparent;color:var(--text-muted);border-radius:8px;min-width:32px;height:30px;cursor:pointer}.lh-oc-admin-remove:hover{color:var(--lake-copper-soft,var(--pink));border-color:rgba(215,169,130,.55)}@media(max-width:760px){.lh-oc-admin-grid,.lh-oc-admin-row{grid-template-columns:1fr}.lh-oc-admin-row textarea{grid-column:auto}}
+.lh-oc-admin-block{border:1px solid rgba(215,169,130,.2);background:rgba(215,169,130,.045);border-radius:12px;padding:12px;margin:12px 0}.lh-oc-admin-title{font-size:11px;color:var(--lake-copper-soft,var(--pink));letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.lh-oc-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;}.lh-oc-admin-row{display:grid;grid-template-columns:minmax(90px,.8fr) minmax(0,1.2fr) auto;gap:6px;align-items:center;margin-bottom:6px}.lh-oc-admin-row textarea{grid-column:1/3}.lh-oc-admin-row-wide{grid-template-columns:minmax(0,1fr)}.lh-oc-admin-mini{font-size:10px;color:var(--text-muted);line-height:1.55}.lh-oc-admin-actions{display:flex;gap:6px;flex-wrap:wrap}.lh-oc-admin-file{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:0 12px;border:1px solid rgba(215,169,130,.28);border-radius:999px;background:rgba(215,169,130,.07);color:var(--text-muted);cursor:pointer;font-size:11px}.lh-oc-admin-file input{display:none}.lh-oc-admin-remove{border:1px solid rgba(215,169,130,.2);background:transparent;color:var(--text-muted);border-radius:8px;min-width:32px;height:30px;cursor:pointer}.lh-oc-admin-remove:hover{color:var(--lake-copper-soft,var(--pink));border-color:rgba(215,169,130,.55)}@media(max-width:760px){.lh-oc-admin-grid,.lh-oc-admin-row{grid-template-columns:1fr}.lh-oc-admin-row textarea{grid-column:auto}}
 </style>
 <script id="lakehouse-index-oc-admin-extended-js">
 (function(){
