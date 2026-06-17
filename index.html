@@ -409,6 +409,54 @@ html,body{overflow:hidden!important;}
   #page-trpg #trpg-cards,#page-trpg > .world-card-item,#page-guest #guest-list,#page-guest #guest-form-inner{width:100%!important;max-width:none!important;}
 }
 </style>
+<style id="lakehouse-guest-align-fix-css">
+/* Guest form alignment: match the guest list left edge. */
+#page-guest #guest-list,
+#page-guest #guest-login-notice,
+#page-guest #guest-form-inner{
+  transform:none!important;
+  margin-left:0!important;
+}
+#page-guest #guest-login-notice{
+  display:inline-flex!important;
+  width:auto!important;
+  max-width:max-content!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:9px 14px!important;
+  margin-top:0!important;
+  margin-bottom:16px!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+#page-guest #guest-form-inner{
+  width:min(700px,calc(100vw - 440px))!important;
+  max-width:700px!important;
+  box-sizing:border-box!important;
+}
+#page-guest #guest-form-inner .form-group{
+  width:100%!important;
+  margin:0 0 12px 0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#page-guest #guest-form-inner .form-label{
+  display:block!important;
+  margin:0 0 7px 0!important;
+}
+#page-guest #guest-name,
+#page-guest #guest-msg{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:900px){
+  #page-guest #guest-form-inner{width:100%!important;max-width:none!important;}
+  #page-guest #guest-login-notice{white-space:normal!important;max-width:100%!important;}
+}
+</style>
 </head>
 <body>
 
